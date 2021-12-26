@@ -1,10 +1,5 @@
 import tkinter as tk
-
-ovals = []
-ovalText = []
-lines = []
-
-window = tk.Tk()
+import turtle
 
 def Read():
     
@@ -25,115 +20,96 @@ def Read():
 
   return preorder, inorder
 
-class node():
-  
-  def __init__(self, x0, y0, x1, y1):
-    self.p1 = [x0, y0]
-    self.p2 = [x1, y1]
-    self.xy = [x0, y0, x1, y1]
+class TreeNode:
+    def __init__(self, val, left=None, right=None):
+        self.val = val
+        self.left = left
+        self.right = right
 
-def binary_tree_traversal(ordermember):
+def drawtree(root):
+    def height(root):
+        return 1 + max(height(root.left), height(root.right)) if root else -1
+    def jumpto(x, y):
+        t.penup()
+        t.goto(x, y)
+        t.pendown()
+    def draw(node, x, y, dx):
+        if node:
+            t.goto(x, y)
+            jumpto(x, y-20)
+            draw(node.left, x-dx, y-60, dx/2)
+            jumpto(x, y-20)
+            t.fillcolor("grey")
+            t.begin_fill()
+            t.circle(20)
+            t.end_fill()
+            jumpto(x, y-10)
+            t.write(node.val, align='center', font=('Arial', 12, 'normal'))
+            jumpto(x, y-20)
+            draw(node.right, x+dx, y-60, dx/2)
 
-  global ovals, ovalText, lines
-   
-  nodes = [] 
-  width = 25
-  moveX = 200
-  moveY = 100
+    t.showturtle()
+    t.speed(0); 
+    h = height(root)
+    jumpto(0, 30*h)
+    draw(root, 0, 30*h, 40*h)
+    t.hideturtle()
 
-  cv = tk.Canvas(window, bg='white', height=700, width=1000)
-  cv.place(x=200, y=100)
-
-  #root
-  nodes.append(node(500, 50, 550, 100))
-  ovals.append(cv.create_oval(nodes[0].xy, fill='lightgrey'))
-  ovalText.append(cv.create_text(nodes[0].p1[0] + width, nodes[0].p1[1] + width, text=ordermember[0], font='30'))
-
-  #1
-  nodes.append(node(nodes[0].p1[0] - moveX, nodes[0].p1[1] + moveY, nodes[0].p2[0] - moveX, nodes[0].p2[1] + moveY))
-  lines.append(cv.create_line(nodes[0].p1[0], nodes[0].p2[1], nodes[1].p2[0], nodes[1].p1[1]))
-  ovals.append(cv.create_oval(nodes[1].xy, fill='lightgrey'))
-  ovalText.append(cv.create_text(nodes[1].p1[0] + width, nodes[1].p1[1] + width, text=ordermember[1], font='30'))
-
-  #2
-  nodes.append(node(nodes[0].p1[0] + moveX, nodes[0].p1[1] + moveY, nodes[0].p2[0] + moveX, nodes[0].p2[1] + moveY))
-  lines.append(cv.create_line(nodes[0].p2[0], nodes[0].p2[1], nodes[2].p1[0], nodes[2].p1[1]))
-  ovals.append(cv.create_oval(nodes[2].xy, fill='lightgrey'))
-  ovalText.append(cv.create_text(nodes[2].p1[0] + width, nodes[2].p1[1] + width, text=ordermember[2], font='30'))
-
-  #3-6
-  moveX -= 95
-  left = 3
-  right = 4
-
-  for parent in range(1, 3):
-    nodes.append(node(nodes[parent].p1[0] - moveX, nodes[parent].p1[1] + moveY, nodes[parent].p2[0] - moveX, nodes[parent].p2[1] + moveY))
-    lines.append(cv.create_line(nodes[parent].p1[0], nodes[parent].p2[1], nodes[left].p2[0], nodes[left].p1[1]))
-    ovals.append(cv.create_oval(nodes[left].xy, fill='lightgrey'))
-    ovalText.append(cv.create_text(nodes[left].p1[0] + width, nodes[left].p1[1] + width, text=ordermember[left], font='30'))
-
-    nodes.append(node(nodes[parent].p1[0] + moveX, nodes[parent].p1[1] + moveY, nodes[parent].p2[0] + moveX, nodes[parent].p2[1] + moveY))
-    lines.append(cv.create_line(nodes[parent].p2[0], nodes[parent].p2[1], nodes[right].p1[0], nodes[right].p1[1]))
-    ovals.append(cv.create_oval(nodes[right].xy, fill='lightgrey'))
-    ovalText.append(cv.create_text(nodes[right].p1[0] + width, nodes[right].p1[1] + width, text=ordermember[right], font='30'))
-    left += 2
-    right += 2
-
-  #7-14
-  moveX -= 60
-  moveY += 25
-  left = 7
-  right = 8
-
-  for parent in range(3, 7):
-    nodes.append(node(nodes[parent].p1[0] - moveX, nodes[parent].p1[1] + moveY, nodes[parent].p2[0] - moveX, nodes[parent].p2[1] + moveY))
-    lines.append(cv.create_line(nodes[parent].p1[0], nodes[parent].p2[1], nodes[left].p1[0] + width, nodes[left].p1[1]))
-    ovals.append(cv.create_oval(nodes[left].xy, fill='lightgrey'))
-    ovalText.append(cv.create_text(nodes[left].p1[0] + width, nodes[left].p1[1] + width, text=ordermember[left], font='30'))
-
-    nodes.append(node(nodes[parent].p1[0] + moveX, nodes[parent].p1[1] + moveY, nodes[parent].p2[0] + moveX, nodes[parent].p2[1] + moveY))
-    lines.append(cv.create_line(nodes[parent].p2[0], nodes[parent].p2[1], nodes[right].p2[0] - width, nodes[right].p1[1]))
-    ovals.append(cv.create_oval(nodes[right].xy, fill='lightgrey'))
-    ovalText.append(cv.create_text(nodes[right].p1[0] + width, nodes[right].p1[1] + width, text=ordermember[right], font='30'))
-    left += 2
-    right += 2
-
-  #delete unused node
-  for i in range(0, len(ordermember)):
-    if ordermember[i] == " ":
-      cv.delete(ovals[i])
-      if i >= 0:
-       cv.delete(lines[i-1])
+preIndex = 0
+mp = {}
+def buildTree(inn, pre, inStrt, inEnd):
+     
+    global preIndex, mp
+ 
+    if (inStrt > inEnd):
+        return None
+ 
+    # Pick current node from Preorder traversal
+    # using preIndex and increment preIndex
+    curr = pre[preIndex]
+    preIndex += 1
+    tNode = TreeNode(curr)
+ 
+    # If this node has no children then return
+    if (inStrt == inEnd):
+        return tNode
+ 
+    # Else find the index of this
+    # node in Inorder traversal
+    inIndex = mp[curr]
+ 
+    # Using index in Inorder traversal,
+    # construct left and right subtress
+    tNode.left = buildTree(inn, pre, inStrt,
+                           inIndex - 1)
+    tNode.right = buildTree(inn, pre, inIndex + 1,
+                            inEnd)
+ 
+    return tNode
+ 
+# This function mainly creates an
+# unordered_map, then calls buildTree()
+def buldTreeWrap(inn, pre, lenn):
+     
+    global mp
+     
+    # Store indexes of all items so that we
+    # we can quickly find later
+    # unordered_map<char, int> mp;
+    for i in range(lenn):
+        mp[inn[i]] = i
+ 
+    return buildTree(inn, pre, 0, lenn - 1)
 
 def binary_tree_traversal_handler():
+  global preIndex, mp
+  preIndex = 0
+  mp = {}
+  preorder, inorder = Read() 
+  root = buldTreeWrap(inorder, preorder, len(inorder)) 
+  drawtree(root)
 
-  ordermember = []
-  for i in range(0, 15):
-    ordermember.append(" ")
-
-  order = [ 
-    [-1], [0], [0, 1], [0, 1, 2], [0, 1, 3, 2],
-    [0, 1, 3, 4, 2],
-    [0, 1, 3, 4, 2, 5],
-    [0, 1, 3, 4, 2, 5, 6],
-    [0, 1, 3, 7, 4, 2, 5, 6],
-    [0, 1, 3, 7, 8, 4, 2, 5, 6], 
-    [0, 1, 3, 7, 8, 4, 9, 2, 5, 6], 
-    [0, 1, 3, 7, 8, 4, 9, 10, 2, 5, 6],
-    [0, 1, 3, 7, 8, 4, 9, 10, 2, 5, 11, 6], 
-    [0, 1, 3, 7, 8, 4, 9, 10, 2, 5, 11, 12, 6], 
-    [0, 1, 3, 7, 8, 4, 9, 10, 2, 5, 11, 12, 6, 13],
-    [0, 1, 3, 7, 8, 4, 9, 10, 2, 5, 11, 12, 6, 13, 14]]
-
-  index = 0
-  preorder, inorder = Read()  
-  
-  for i in preorder:
-    ordermember[order[len(preorder)][index]] = i    
-    index += 1
-
-  binary_tree_traversal(ordermember)
-
+window = tk.Tk()
 window.title('binary_tree_traversal')
 window.geometry("1400x720")
 
@@ -142,5 +118,9 @@ input1.place(x=500, y=2, width=500, height=50)
 
 button1 = tk.Button(window, text='start', command=binary_tree_traversal_handler, font='30')
 button1 .place(x=700, y=55)
+
+cv = tk.Canvas(window, bg='white', height=700, width=1000)
+cv.place(x=200, y=100)
+t = turtle.RawTurtle(cv)
 
 tk.mainloop()
