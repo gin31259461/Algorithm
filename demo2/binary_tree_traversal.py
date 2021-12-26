@@ -26,6 +26,7 @@ class TreeNode:
         self.left = left
         self.right = right
 
+size = 1 
 def drawtree(root):
     def height(root):
         return 1 + max(height(root.left), height(root.right)) if root else -1
@@ -36,23 +37,23 @@ def drawtree(root):
     def draw(node, x, y, dx):
         if node:
             t.goto(x, y)
-            jumpto(x, y-20)
-            draw(node.left, x-dx, y-60, dx/2)
-            jumpto(x, y-20)
+            jumpto(x, y-20*size)
+            draw(node.left, x-dx, y-60*size, dx/2)
+            jumpto(x, y-20*size)
             t.fillcolor("grey")
             t.begin_fill()
-            t.circle(20)
+            t.circle(20*size)
             t.end_fill()
-            jumpto(x, y-10)
-            t.write(node.val, align='center', font=('Arial', 12, 'normal'))
-            jumpto(x, y-20)
-            draw(node.right, x+dx, y-60, dx/2)
+            jumpto(x, y-10*size)
+            t.write(node.val, align='center', font=('Arial', 12*size, 'normal'))
+            jumpto(x, y-20*size)
+            draw(node.right, x+dx, y-60*size, dx/2)
 
     t.showturtle()
     t.speed(0); 
     h = height(root)
-    jumpto(0, 30*h)
-    draw(root, 0, 30*h, 40*h)
+    jumpto(0, 30*h*size)
+    draw(root, 0, 30*h*size, 40*h*size)
     t.hideturtle()
 
 preIndex = 0
