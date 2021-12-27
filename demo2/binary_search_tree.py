@@ -152,6 +152,8 @@ def draw_search_tree(root):
             jumpto(x, y-10*size)
             t.write(node.val, align='center', font=('Arial', 12*size, 'normal'))
             searchIndex += 1
+            if searchIndex == len(search_data):
+              return
             jumpto(x, y-20*size)
             
             if search_data[searchIndex] == node.left.val:
@@ -235,7 +237,6 @@ def search_data_handler():
   search_data = root.search(root, int(data))
   draw_search_tree(root)
   tmp = "Search result : "
-
   if search_data[len(search_data)-1] != int(data):
     tmp += "Not Found"
   else:
