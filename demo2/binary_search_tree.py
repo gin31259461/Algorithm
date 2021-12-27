@@ -21,13 +21,16 @@ def ReadTwoLine():
   return preorder, inorder
 
 def ReadOneLine():
-  tmp = input_node.get(1.0, "end-1c") 
+
   read = []
+  tmp = input_node.get(1.0, "end-1c") 
+
   for i in tmp.split(", "):
     read.append(int(i))
   return read
 
 class TreeNode:
+
   def __init__(self, val, left=None, right=None):
     self.val = val
     self.left = left
@@ -66,20 +69,16 @@ class TreeNode:
       currentNode = currentNode.left
     return currentNode
 
-  #inorder
   def deleteNode(self, root, val): 
 
     if root == None:
       return root
 
     if root:
-
       if val < root.val:
         root.left = self.deleteNode(root.left, val)
-
       elif val > root.val:
         root.right = self.deleteNode(root.right, val)
-
       else:
       # case only one child or no child
         if root.right == None:
@@ -91,7 +90,6 @@ class TreeNode:
           tmp = root.right
           root = None
           return tmp
-
       # case two child
         else:
           tmp = self.next_successor(root.right) 
@@ -99,11 +97,11 @@ class TreeNode:
           root.val = tmp.val
           # delete inorder successor
           root.right = self.deleteNode(root.right, tmp.val)
-    
     return root
 
 size = 1
 def drawtree(root):
+
     def height(root):
         return 1 + max(height(root.left), height(root.right)) if root else -1
     def jumpto(x, y):
@@ -124,7 +122,6 @@ def drawtree(root):
             t.write(node.val, align='center', font=('Arial', 12*size, 'normal'))
             jumpto(x, y-20*size)
             draw(node.right, x+dx, y-60*size, dx/2)
-
     t.clear()
     t.showturtle()
     t.speed(0); 
@@ -134,6 +131,7 @@ def drawtree(root):
     t.hideturtle()
 
 def draw_search_tree(root):
+
     def height(root):
         return 1 + max(height(root.left), height(root.right)) if root else -1
     def jumpto(x, y):
@@ -160,7 +158,6 @@ def draw_search_tree(root):
               draw(node.left, x-dx, y-60*size, dx/2)
             elif search_data[searchIndex] == node.right.val:
               draw(node.right, x+dx, y-60*size, dx/2)
-
     t.showturtle()
     t.speed(0); 
     h = height(root)
@@ -175,7 +172,7 @@ def buildTree(inn, pre, inStrt, inEnd):
     global preIndex, mp
  
     if (inStrt > inEnd):
-        return None
+      return None
  
     # Pick current node from Preorder traversal
     # using preIndex and increment preIndex
@@ -185,7 +182,7 @@ def buildTree(inn, pre, inStrt, inEnd):
  
     # If this node has no children then return
     if (inStrt == inEnd):
-        return tNode
+      return tNode
  
     # Else find the index of this
     # node in Inorder traversal
@@ -193,10 +190,8 @@ def buildTree(inn, pre, inStrt, inEnd):
  
     # Using index in Inorder traversal,
     # construct left and right subtress
-    tNode.left = buildTree(inn, pre, inStrt,
-                           inIndex - 1)
-    tNode.right = buildTree(inn, pre, inIndex + 1,
-                            inEnd)
+    tNode.left = buildTree(inn, pre, inStrt, inIndex - 1)
+    tNode.right = buildTree(inn, pre, inIndex + 1, inEnd)
  
     return tNode
  
@@ -205,7 +200,6 @@ def buildTree(inn, pre, inStrt, inEnd):
 def buldTreeWrap(inn, pre, lenn):
      
     global mp
-     
     # Store indexes of all items so that we
     # we can quickly find later
     # unordered_map<char, int> mp;
@@ -216,6 +210,7 @@ def buldTreeWrap(inn, pre, lenn):
 
 root = TreeNode(0)
 def binary_search_tree_build_handler():
+
   global root
   data = ReadOneLine()
   init = 0
@@ -226,17 +221,20 @@ def binary_search_tree_build_handler():
       init += 1
     else:
       root.insert(int(i))
+
   drawtree(root)
 
 search_data = []
 searchIndex = 0
 def search_data_handler():
+
   global search_data, searchIndex
   searchIndex = 0
   data = input_search.get()
   search_data = root.search(root, int(data))
   draw_search_tree(root)
   tmp = "Search result : "
+
   if search_data[len(search_data)-1] != int(data):
     tmp += "Not Found"
   else:
@@ -251,12 +249,14 @@ def search_data_handler():
   search_result.set(tmp)
 
 def delete_node_handler():
+
   global root
   data = input_delete.get() 
   root = root.deleteNode(root, int(data))
   drawtree(root)
 
 def BTS_traversal_build_handler():
+
   global root, preIndex, mp
   preIndex = 0
   mp = {}
