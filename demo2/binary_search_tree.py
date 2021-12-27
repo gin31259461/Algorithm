@@ -67,7 +67,7 @@ class TreeNode:
     return currentNode
 
   #inorder
-  def deleteNode(self, root, val):
+  def deleteNode(self, root, val): 
 
     if root == None:
       return root
@@ -126,6 +126,39 @@ def drawtree(root):
             draw(node.right, x+dx, y-60*size, dx/2)
 
     t.clear()
+    t.showturtle()
+    t.speed(0); 
+    h = height(root)
+    jumpto(0, 30*h*size)
+    draw(root, 0, 30*h*size, 40*h*size)
+    t.hideturtle()
+
+def draw_search_tree(root):
+    def height(root):
+        return 1 + max(height(root.left), height(root.right)) if root else -1
+    def jumpto(x, y):
+        t.penup()
+        t.goto(x, y)
+        t.pendown()
+    def draw(node, x, y, dx):
+        global search_data, searchIndex
+        if node:
+            t.goto(x, y)
+            jumpto(x, y-20*size)
+            t.fillcolor("yellow")
+            t.begin_fill()
+            t.circle(20*size)
+            t.end_fill()
+            jumpto(x, y-10*size)
+            t.write(node.val, align='center', font=('Arial', 12*size, 'normal'))
+            searchIndex += 1
+            jumpto(x, y-20*size)
+            
+            if search_data[searchIndex] == node.left.val:
+              draw(node.left, x-dx, y-60*size, dx/2)
+            elif search_data[searchIndex] == node.right.val:
+              draw(node.right, x+dx, y-60*size, dx/2)
+
     t.showturtle()
     t.speed(0); 
     h = height(root)
@@ -193,16 +226,21 @@ def binary_search_tree_build_handler():
       root.insert(int(i))
   drawtree(root)
 
+search_data = []
+searchIndex = 0
 def search_data_handler():
+  global search_data, searchIndex
+  searchIndex = 0
   data = input_search.get()
-  result = root.search(root, int(data))
+  search_data = root.search(root, int(data))
+  draw_search_tree(root)
   tmp = "Search result : "
 
-  if result[len(result)-1] != int(data):
+  if search_data[len(search_data)-1] != int(data):
     tmp += "Not Found"
   else:
     init = 0
-    for i in result:
+    for i in search_data:
       if init == 0:
         tmp += "[" + str(i)
         init += 1
