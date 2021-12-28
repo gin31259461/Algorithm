@@ -130,6 +130,7 @@ def drawtree(root):
     draw(root, 0, 30*h*size, 40*h*size)
     t.hideturtle()
 
+fillColor = "grey"
 def draw_search_tree(root):
 
     def height(root):
@@ -140,12 +141,12 @@ def draw_search_tree(root):
         t.pendown()
     def draw(node, x, y, dx):
 
-        global searchVal, searchIndex
+        global searchVal, searchIndex, fillColor
 
         if node:
             t.goto(x, y)
             jumpto(x, y-20*size)
-            t.fillcolor("yellow")
+            t.fillcolor(fillColor)
             t.begin_fill()
             t.circle(20*size)
             t.end_fill()
@@ -156,10 +157,20 @@ def draw_search_tree(root):
               return
             jumpto(x, y-20*size)
             
-            if searchVal[searchIndex] == node.left.val:
-              draw(node.left, x-dx, y-60*size, dx/2)
-            elif searchVal[searchIndex] == node.right.val:
-              draw(node.right, x+dx, y-60*size, dx/2)
+            if searchIndex == len(searchVal):
+              return
+
+            if node.left != None:
+              if searchVal[searchIndex] == node.left.val:
+                draw(node.left, x-dx, y-60*size, dx/2)
+
+            if searchIndex == len(searchVal):
+              return
+
+            if node.right != None:
+              if searchVal[searchIndex] == node.right.val:
+                draw(node.right, x+dx, y-60*size, dx/2)
+
     t.showturtle()
     t.speed(0); 
     h = height(root)
@@ -228,13 +239,14 @@ def binary_search_tree_build_handler():
   drawtree(root)
 
 searchVal = []
-preSearchVal = []
+preSearchVal = [None]
 searchIndex = 0
 def search_value_handler():
 
-  global searchVal, searchIndex, preSearchVal
+  global searchVal, searchIndex, preSearchVal, fillColor
 
   searchIndex = 0
+  fillColor = "grey"
   tmp = "Search result : "
 
   data = input_search.get()
@@ -242,6 +254,10 @@ def search_value_handler():
   searchVal = preSearchVal 
   draw_search_tree(root)
   searchVal = reg
+
+  searchIndex = 0
+  fillColor = "yellow"
+
   draw_search_tree(root)
   preSearchVal = searchVal
 
