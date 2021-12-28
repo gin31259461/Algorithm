@@ -69,16 +69,16 @@ class TreeNode:
       currentNode = currentNode.left
     return currentNode
 
-  def deleteNode(self, root, val): 
+  def delete(self, root, val): 
 
     if root == None:
       return root
 
     if root:
       if val < root.val:
-        root.left = self.deleteNode(root.left, val)
+        root.left = self.delete(root.left, val)
       elif val > root.val:
-        root.right = self.deleteNode(root.right, val)
+        root.right = self.delete(root.right, val)
       else:
       # case only one child or no child
         if root.right == None:
@@ -96,7 +96,7 @@ class TreeNode:
           # connect to next successor
           root.val = tmp.val
           # delete inorder successor
-          root.right = self.deleteNode(root.right, tmp.val)
+          root.right = self.delete(root.right, tmp.val)
     return root
 
 size = 1
@@ -139,7 +139,9 @@ def draw_search_tree(root):
         t.goto(x, y)
         t.pendown()
     def draw(node, x, y, dx):
-        global search_data, searchIndex
+
+        global searchVal, searchIndex
+
         if node:
             t.goto(x, y)
             jumpto(x, y-20*size)
@@ -150,13 +152,13 @@ def draw_search_tree(root):
             jumpto(x, y-10*size)
             t.write(node.val, align='center', font=('Arial', 12*size, 'normal'))
             searchIndex += 1
-            if searchIndex == len(search_data):
+            if searchIndex == len(searchVal):
               return
             jumpto(x, y-20*size)
             
-            if search_data[searchIndex] == node.left.val:
+            if searchVal[searchIndex] == node.left.val:
               draw(node.left, x-dx, y-60*size, dx/2)
-            elif search_data[searchIndex] == node.right.val:
+            elif searchVal[searchIndex] == node.right.val:
               draw(node.right, x+dx, y-60*size, dx/2)
     t.showturtle()
     t.speed(0); 
@@ -195,14 +197,13 @@ def buildTree(inn, pre, inStrt, inEnd):
  
     return tNode
  
-# This function mainly creates an
-# unordered_map, then calls buildTree()
+# use this function call buildTree
 def buldTreeWrap(inn, pre, lenn):
      
     global mp
-    # Store indexes of all items so that we
-    # we can quickly find later
-    # unordered_map<char, int> mp;
+    
+    # store inorder index of value
+    # map <char, int> 
     for i in range(lenn):
         mp[inn[i]] = i
  
@@ -212,8 +213,10 @@ root = TreeNode(0)
 def binary_search_tree_build_handler():
 
   global root
-  data = ReadOneLine()
+
   init = 0
+
+  data = ReadOneLine()
 
   for i in data:
     if init == 0:
@@ -224,22 +227,29 @@ def binary_search_tree_build_handler():
 
   drawtree(root)
 
-search_data = []
+searchVal = []
+preSearchVal = []
 searchIndex = 0
-def search_data_handler():
+def search_value_handler():
 
-  global search_data, searchIndex
+  global searchVal, searchIndex, preSearchVal
+
   searchIndex = 0
-  data = input_search.get()
-  search_data = root.search(root, int(data))
-  draw_search_tree(root)
   tmp = "Search result : "
 
-  if search_data[len(search_data)-1] != int(data):
+  data = input_search.get()
+  reg = root.search(root, int(data))
+  searchVal = preSearchVal 
+  draw_search_tree(root)
+  searchVal = reg
+  draw_search_tree(root)
+  preSearchVal = searchVal
+
+  if searchVal[len(searchVal)-1] != int(data):
     tmp += "Not Found"
   else:
     init = 0
-    for i in search_data:
+    for i in searchVal:
       if init == 0:
         tmp += "[" + str(i)
         init += 1
@@ -251,15 +261,18 @@ def search_data_handler():
 def delete_node_handler():
 
   global root
+
   data = input_delete.get() 
-  root = root.deleteNode(root, int(data))
+  root.delete(root, int(data))
   drawtree(root)
 
-def BTS_traversal_build_handler():
+def traversal_build_tree_handler():
 
   global root, preIndex, mp
+
   preIndex = 0
   mp = {}
+
   preorder, inorder = ReadTwoLine()
   root = buldTreeWrap(inorder, preorder, len(inorder))
   drawtree(root)
@@ -273,32 +286,36 @@ search = tk.StringVar()
 search_result = tk.StringVar()
 delete = tk.StringVar()
 
-input_node = tk.Text(window, font='30')
-input_node.place(x=500, y=2, width=500, height=50)
+input_node = tk.Text(window, font='30', )
+input_node.config(height=2)
+input_node.grid(row=0, column=0, pady=10)
 
 input_search = tk.Entry(window, textvariable=search, font='30')
-input_search.place(x=1450, y=150, height=30, width=40)
+input_search.config(width=4)
+input_search.grid(row=3, column=2)
 
 input_delete = tk.Entry(window, textvariable=delete, font='30')
-input_delete.place(x=1450, y=200, height=30, width=40)
+input_delete.config(width=4)
+input_delete.grid(row=4, column=2)
 
 button_build = tk.Button(window, text='Build', command=binary_search_tree_build_handler, font='30')
-button_build .place(x=1500, y=55)
+button_build.grid(row=1, column=3, sticky="w")
 
-button_order_build = tk.Button(window, text='Order Build', font='30', command=BTS_traversal_build_handler)
-button_order_build.place(x=1500, y=100)
+button_order_build = tk.Button(window, text='Order Build', font='30', command=traversal_build_tree_handler)
+button_order_build.grid(row=2, column=3, sticky="w")
 
-button_search = tk.Button(window, text='Search', font='30', command=search_data_handler)
-button_search.place(x=1500, y=150)
+button_search = tk.Button(window, text='Search', font='30', command=search_value_handler)
+button_search.grid(row=3, column=3, sticky="w")
 
 button_delete = tk.Button(window, text='Delete', font='30', command=delete_node_handler)
-button_delete.place(x=1500, y=200)
+button_delete.grid(row=4, column=3, sticky="w")
 
 search_result_label = tk.Label(window, textvariable=search_result, font='100')
-search_result_label.place(x=1400, y=500)
+search_result_label.config(width=30)
+search_result_label.grid(row=5, column=1)
 
-cv = tk.Canvas(window, bg='white', height=700, width=1000)
-cv.place(x=200, y=100)
+cv = tk.Canvas(window, bg='white', height=800, width=1200)
+cv.grid(row=1, column=0, padx=50, rowspan=5)
 t = turtle.RawTurtle(cv)
 
 tk.mainloop()
