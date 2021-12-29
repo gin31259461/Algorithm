@@ -5,6 +5,7 @@ result_str = ""
 arr = []
 
 def Read():
+
   arr = []
   tmp = inputBuffer.get()
 
@@ -16,6 +17,7 @@ def Read():
 def prepare_result(text, arr):
 
   tmp = text 
+
   for i in arr:
     tmp += str(i) + " "
   tmp += '\n'
@@ -24,6 +26,7 @@ def prepare_result(text, arr):
 def Merge(front, mid, end):
 
   global arr
+
   leftArr = []
   rightArr = [] 
   leftIndex = 0 
@@ -69,9 +72,8 @@ def MergeSort(front, end):
     MergeSort(front, midIndex)
     MergeSort(midIndex+1, end)
     Merge(front, midIndex, end)
-
-  merge_time += 1
-  result_str += prepare_result("第" + str(merge_time) + "輪排序結果:", arr)
+    merge_time += 1
+    result_str += prepare_result("第" + str(merge_time) + "輪排序結果:", arr)
 
 def MergeSort_handler():
   

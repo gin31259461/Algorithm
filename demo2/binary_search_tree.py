@@ -99,15 +99,16 @@ class TreeNode:
           root.right = self.delete(root.right, tmp.val)
     return root
 
+def height(root):
+    return 1 + max(height(root.left), height(root.right)) if root else -1
+def jumpto(x, y):
+    t.penup()
+    t.goto(x, y)
+    t.pendown()
+
 size = 1
 def drawtree(root):
 
-    def height(root):
-        return 1 + max(height(root.left), height(root.right)) if root else -1
-    def jumpto(x, y):
-        t.penup()
-        t.goto(x, y)
-        t.pendown()
     def draw(node, x, y, dx):
         if node:
             t.goto(x, y)
@@ -133,12 +134,6 @@ def drawtree(root):
 fillColor = "grey"
 def draw_search_tree(root):
 
-    def height(root):
-        return 1 + max(height(root.left), height(root.right)) if root else -1
-    def jumpto(x, y):
-        t.penup()
-        t.goto(x, y)
-        t.pendown()
     def draw(node, x, y, dx):
 
         global searchVal, searchIndex, fillColor
