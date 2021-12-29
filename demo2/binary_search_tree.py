@@ -63,44 +63,61 @@ class TreeNode:
         res += self.search(node.left, val)
     return res 
 
-  def next_successor(self, node):
-    currentNode = node
-    while currentNode.left != None:
-      currentNode = currentNode.left
-    return currentNode
-
-  def delete(self, root, val): 
-
-    if root == None:
+  def delete(self, root, val):
+     
+    if root is None:
       return root
-
-    if root:
-      if val < root.val:
-        root.left = self.delete(root.left, val)
-      elif val > root.val:
-        root.right = self.delete(root.right, val)
-      else:
-      # case only one child or no child
-        if root.right == None:
-          tmp = root.left
-          root = None
-          return tmp
-
-        elif root.left == None:
-          tmp = root.right
-          root = None
-          return tmp
-      # case two child
-        else:
-          tmp = self.next_successor(root.right) 
-          # connect to next successor
-          root.val = tmp.val
-          # delete inorder successor
-          root.right = self.delete(root.right, tmp.val)
+     
+    if val < root.val:
+      root.left = self.delete(root.left, val)
+      return root
+     
+    elif(val > root.val):
+      root.right = self.delete(root.right, val)
+      return root
+     
+    if root.left is None and root.right is None:
+      return None
+     
+    # case one of the children is empty
+     
+    if root.left is None:
+      temp = root.right
+      root = None
+      return temp
+     
+    elif root.right is None:
+      temp = root.left
+      root = None
+      return temp
+     
+    # case both children exist
+     
+    succParent = root
+     
+    # Find Successor
+     
+    succ = root.right
+     
+    while succ.left != None:
+      succParent = succ
+      succ = succ.left
+     
+    # delete successor
+    if succParent != root:
+      succParent.left = succ.right
+    else:
+      succParent.right = succ.right
+     
+    # Copy Successor Data to root
+     
+    root.val = succ.val
+     
     return root
 
 def height(root):
     return 1 + max(height(root.left), height(root.right)) if root else -1
+
 def jumpto(x, y):
     t.penup()
     t.goto(x, y)
@@ -257,8 +274,14 @@ def search_value_handler():
   preSearchVal = searchVal
 
   if searchVal[len(searchVal)-1] != int(data):
+    searchIndex = 0
     tmp += "Not Found"
+    fillColor = "red"
+    draw_search_tree(root)
   else:
+    searchIndex = 0
+    fillColor = "green"
+    draw_search_tree(root)
     init = 0
     for i in searchVal:
       if init == 0:
