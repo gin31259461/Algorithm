@@ -315,7 +315,6 @@ window = tk.Tk()
 window.title('binary_tree_traversal')
 window.geometry("1920x1080")
 
-data = tk.StringVar()
 search = tk.StringVar()
 search_result = tk.StringVar()
 delete = tk.StringVar()

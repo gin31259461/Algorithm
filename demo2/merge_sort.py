@@ -25,7 +25,7 @@ def prepare_result(text, arr):
 
 def Merge(front, mid, end):
 
-  global arr
+  global arr, merge_time, result_str
 
   leftArr = []
   rightArr = [] 
@@ -58,6 +58,8 @@ def Merge(front, mid, end):
       arr[originIndex] = leftArr[leftIndex]
       originIndex += 1
       leftIndex += 1
+  merge_time += 1
+  result_str += prepare_result("第" + str(merge_time) + "輪排序結果:", arr)
 
 def MergeSort(front, end):
 
@@ -72,8 +74,7 @@ def MergeSort(front, end):
     MergeSort(front, midIndex)
     MergeSort(midIndex+1, end)
     Merge(front, midIndex, end)
-    merge_time += 1
-    result_str += prepare_result("第" + str(merge_time) + "輪排序結果:", arr)
+
 
 def MergeSort_handler():
   
