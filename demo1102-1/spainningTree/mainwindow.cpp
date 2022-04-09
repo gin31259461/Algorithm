@@ -68,7 +68,7 @@ void MainWindow::label_message_handler(QString msg)
 
 void MainWindow::paintEvent(QPaintEvent *)
 {
-    QPixmap pix(2100, 2100);
+    QPixmap pix(4000, 4000);
     pix.fill(Qt::white);
 
     QPainter painter(&pix);
@@ -108,9 +108,6 @@ struct edge
     float w;
 };
 
-int findEdge(int a, int p[]) {return a == p[a]? a:p[a] = findEdge(p[a], p);}
-void merge(int a, int b, int *p) {p[findEdge(a, p)] = findEdge(b, p);}
-
 void MainWindow::spainningTreeWrap()
 {
     int N = buffer[0].toInt();
@@ -120,9 +117,9 @@ void MainWindow::spainningTreeWrap()
 
     std::vector<QPoint> stationPoint;
     std::vector<char> stationShape;
-    std::vector<edge> E[size];
+    std::vector<std::vector<int>> adj(size, std::vector<int>(size));
 
-    int scale = 10;
+    int scale = 5;
 
     for(int i = 0; i + 2 < int(stationInfo.size()); i += 3)
     {
@@ -141,25 +138,45 @@ void MainWindow::spainningTreeWrap()
                     pow(stationPoint[i].x() - stationPoint[j].x(), 2) +
                     pow(stationPoint[i].y() - stationPoint[j].y(), 2));
 
-                E->push_back({i, j, w});
-
+                adj[i][j] = w;
             }
         }
 
-    int p[size];
-    //initial p with V - 1 edge
+    //minimal spainning tree
+    //prim's algorithm
+
+    int d[size];
+    int parent[size];
+    bool visit[size];
+
     for(int i = 0; i < size; i++)
-        p[i] = i;
-
-    std::sort(E->begin(), E->end(), [](edge a, edge b){return a.w < b.w;});
-
-    //exhaustive all edge until limit V - 1
-    std::vector<edge>::iterator it = E->begin();
-
-    for(int i = 0; i < size - 1 && it != E->end(); i++, it++)
     {
-        while(findEdge(it->a, p) == findEdge(it->b, p)) it++;
-        merge(it->a, it->b, p);
+        d[i] = 1e9;
+        visit[i] = false;
+    }
+
+    d[0] = 0;
+    parent[0] = 0;
+
+    for(int i = 0; i < size; i++)
+    {
+        int a = -1, b = -1, min = 1e9;
+        for(int j = 0; j < size; j++)
+            if(!visit[j] && d[j] < min)
+            {
+                a = j;
+                min = d[j];
+            }
+
+         if(a == -1) break;
+         visit[a] = true;
+
+         for(b = 0; b < size; b++)
+             if(!visit[b] && adj[a][b] < d[b])
+             {
+                 d[b] = adj[a][b];
+                 parent[b] = a;
+             }
     }
 
     //draw minimum spanning tree
@@ -174,7 +191,7 @@ void MainWindow::spainningTreeWrap()
     for(int i = 0; i < size; i++)
     {
         m_painter->setPen(pen);
-        m_painter->drawLine(stationPoint[i], stationPoint[p[i]]);
+        m_painter->drawLine(stationPoint[i], stationPoint[parent[i]]);
     }
 
     m_painter->setBrush(brush);

@@ -21,7 +21,6 @@ collection::collection()
 void collection::findBestCombination(std::vector<int> index, int time, std::string type, std::vector<int> &newIndex)
 {
     newIndex.clear();
-    int size = index.size();
     std::vector<int> type_buffer, dp(time+1), best(time+1, -1);
 
     if(type == "燃料")
@@ -36,11 +35,11 @@ void collection::findBestCombination(std::vector<int> index, int time, std::stri
         return;
 
     //dp
-    for(int i = 0; i < size; i++)
-        for(int t = time; t >= this->times[index[i]]; t--)
+    for(int i = 0; i < int(index.size()); i++)
+        for(int t = time; t >= times[ index[i] ]; t--)
         {
-            if( (best[t] == -1 && dp[ t - times[ index[i] ] ] + type_buffer[ index[i] ] >= dp[t]) ||
-                (best[t] != -1 && dp[ t - times[ index[i] ] ] + type_buffer[ index[i] ] > dp[t]) )
+            if( (dp[ t - times[ index[i] ] ] + type_buffer[ index[i] ] >= dp[t])
+                /*(best[t] != -1 && dp[ t - times[ index[i] ] ] + type_buffer[ index[i] ] > dp[t])*/ )
             {
                 dp[t] = dp[ t - times[ index[i] ] ] + type_buffer[ index[i] ];
                 best[t] = index[i];
@@ -52,6 +51,7 @@ void collection::findBestCombination(std::vector<int> index, int time, std::stri
     {
         if(best[t] == -1)
             break;
+
         newIndex.push_back(best[t]);
         t -= times[best[t]];
     }

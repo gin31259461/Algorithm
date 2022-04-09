@@ -143,13 +143,13 @@ void MainWindow::collection_handler()
 
         //draw rectangle
         int size = newIndex.size();
-        int fixedSize = 1450 / size;
+        int fixedSize = 1380 / size;
         for(int s = 0, c = 20 - 0.5 * size; s < size; s++)
         {
             font.setPointSize(size >= 15 && col.names[newIndex[s]].size() >= 5? c-3:c);
             m_painter->setFont(font);
             msg = QString::fromStdString(col.names[newIndex[s]]);
-            QRectF drawArea(initX + 250 + fixedSize * s, initY - 35 + 80 * i, fixedSize, 50);
+            QRectF drawArea(initX + 320 + fixedSize * s, initY - 35 + 80 * i, fixedSize, 50);
             m_painter->drawRect(drawArea);
             m_painter->drawText(drawArea, Qt::AlignCenter, msg);
         }

@@ -137,7 +137,7 @@ void MainWindow::mathGame_handler(std::vector<int> cards)
 
     QString msg;
     QFont font;
-    font.setPointSize(15);
+    font.setPointSize(10);
 
     for(int i = int(index.size()) - 1; i >= 0; i--)
     {
@@ -154,16 +154,16 @@ void MainWindow::mathGame_handler(std::vector<int> cards)
         }
 
         m_painter->setFont(font);
-        m_painter->drawText(50, 10 + 50 * (int(index.size()) - i), msg);
+        m_painter->drawText(10, 5 + 20 * (int(index.size()) - i), msg);
     }
 
     msg = "總分 ";
     msg += QString::number(dp[0][size-1]);
     msg += " 分";
-    m_painter->drawText(50, 10 + 50 * (int(index.size()) + 1), msg);
+    m_painter->drawText(10, 5 + 20 * (int(index.size()) + 1), msg);
 
     ////////////////////////////////////////////////////
-    font.setPointSize(15);
+    font.setPointSize(10);
 
     //display input information
     msg = "  Cards :";
