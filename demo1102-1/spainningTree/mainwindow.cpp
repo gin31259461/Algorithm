@@ -180,8 +180,8 @@ void MainWindow::spainningTreeWrap()
         for(b = 0; b < size; b++)
             if(!visit[b] && adj[a][b] < d[b])
             {
-                d[b] = adj[a][b];
-                parent[b] = a;
+                d[b] = adj[a][b]; //update distance
+                parent[b] = a; //connect a b
             }
     }
 
