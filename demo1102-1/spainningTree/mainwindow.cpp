@@ -138,45 +138,51 @@ void MainWindow::spainningTreeWrap()
                     pow(stationPoint[i].x() - stationPoint[j].x(), 2) +
                     pow(stationPoint[i].y() - stationPoint[j].y(), 2));
 
-                adj[i][j] = w;
+                adj[i][j] = w; //adjacency matrix
             }
         }
 
     //minimal spainning tree
     //prim's algorithm
 
-    int d[size];
-    int parent[size];
-    bool visit[size];
+    int d[size]; //record distance of mst to each point
+    int parent[size]; //record mst's parent
+    bool visit[size]; //record visited mst
 
+    //initial
     for(int i = 0; i < size; i++)
     {
         d[i] = 1e9;
         visit[i] = false;
     }
 
+    //choose root
     d[0] = 0;
     parent[0] = 0;
 
     for(int i = 0; i < size; i++)
     {
+        //find minimal distance of mst to point
         int a = -1, b = -1, min = 1e9;
         for(int j = 0; j < size; j++)
             if(!visit[j] && d[j] < min)
             {
-                a = j;
+                a = j; //record minimal distance
                 min = d[j];
             }
 
-         if(a == -1) break;
-         visit[a] = true;
+        //found all point
+        if(a == -1) break;
+        visit[a] = true;
 
-         for(b = 0; b < size; b++)
-             if(!visit[b] && adj[a][b] < d[b])
-             {
-                 d[b] = adj[a][b];
-                 parent[b] = a;
-             }
+        //connect closest point to "mst", not root
+        //update minimal distance of mst to point
+        for(b = 0; b < size; b++)
+            if(!visit[b] && adj[a][b] < d[b])
+            {
+                d[b] = adj[a][b];
+                parent[b] = a;
+            }
     }
 
     //draw minimum spanning tree
